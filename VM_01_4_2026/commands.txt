@@ -1,0 +1,137 @@
+cd ~/pmk_all_in_one
+python3 -m venv venv
+source venv/bin/activate
+pip install pandas
+pip install kiteconnect
+pip install pyotp
+
+crontab -e
+10 9 * * * cd /home/harshilkhatri2808/pmk_all_in_one && /home/harshilkhatri2808/pmk_all_in_one/venv/bin/python runMe.py >> /home/harshilkhatri2808/pmk_all_in_one/cron.log 2>&1
+ctrl+o and enter
+ctrl+x
+
+Run program for checking
+cd /home/harshilkhatri2808/pmk_all_in_one && /home/harshilkhatri2808/pmk_all_in_one/venv/bin/python runMe.py
+
+
+crontab -e
+10 9 * * * cd /home/harshilkhatri2808/hdk_all_in_one && /home/harshilkhatri2808/hdk_all_in_one/venv/bin/python runMe.py >> /home/harshilkhatri2808/hdk_all_in_one/cron.log 2>&1
+ctrl+o and enter
+ctrl+x
+
+Run program for checking
+cd /home/harshilkhatri2808/hdk_all_in_one && /home/harshilkhatri2808/hdk_all_in_one/venv/bin/python runMe.py
+
+
+crontab -e
+10 9 * * * cd /home/harshilkhatri2808/tradeJenie && /home/harshilkhatri2808/tradeJenie/venv/bin/python runMe.py >> /home/harshilkhatri2808/tradeJenie/cron.log 2>&1
+ctrl+o and enter
+ctrl+x
+
+crontab -e
+10 9 * * * cd /home/harshilkhatri2808/tradeJenie_Hedge && /home/harshilkhatri2808/tradeJenie_Hedge/venv/bin/python runMe.py >> /home/harshilkhatri2808/tradeJenie_Hedge/cron.log 2>&1
+ctrl+o and enter
+ctrl+x
+
+
+crontab -e
+10 9 * * * cd /home/harshilkhatri2808/uat/tradeJenie && /home/harshilkhatri2808/uat/tradeJenie/venv/bin/python /home/harshilkhatri2808/uat/tradeJenie/runMe.py >> /home/harshilkhatri2808/uat/tradeJenie/cron.log 2>&1
+ctrl+o and enter
+ctrl+x
+
+crontab -e
+10 9 * * * cd /home/harshilkhatri2808/prod/tradeJenie && /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python runMe.py >> /home/harshilkhatri2808/uat/tradeJenie/cron.log 2>&1
+ctrl+o and enter
+ctrl+x
+
+
+Run program for checking TradeJenie
+cd /home/harshilkhatri2808/tradeJenie && /home/harshilkhatri2808/tradeJenie/venv/bin/python runMe.py
+
+cd /home/harshilkhatri2808/hdk_all_in_one && \
+nohup /home/harshilkhatri2808/hdk_all_in_one/venv/bin/python runMe.py > runMe.log 2>&1 &
+
+cd /home/harshilkhatri2808/tradeJenie_Hedge && nohup /home/harshilkhatri2808/tradeJenie_Hedge/venv/bin/python /home/harshilkhatri2808/tradeJenie_Hedge/runMe.py > runMe.log 2>&1 &
+
+cd /home/harshilkhatri2808/pmk_all_in_one && nohup /home/harshilkhatri2808/pmk_all_in_one/venv/bin/python /home/harshilkhatri2808/pmk_all_in_one/runMe.py > runMe.log 2>&1 &
+
+cd /home/harshilkhatri2808/uat/tradeJenie && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/uat/tradeJenie/runMe.py > runMe.log 2>&1 &
+
+cd /home/harshilkhatri2808/prod/tradeJenie && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/prod/tradeJenie/runMe.py > runMe.log 2>&1 &
+
+cd /home/harshilkhatri2808/HTML/index.html
+
+cd /home/harshilkhatri2808/HTML && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/manualtrading.py> manualtrading.log 2>&1 &
+
+cd /home/harshilkhatri2808/HTML && /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/manualtrading.py
+
+cd /home/harshilkhatri2808/HTML && /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/trade_report.py
+
+
+================Check Pnl by Keys without hedge================================
+SELECT 
+    `key`,
+    SUM(pnl) AS total_pnl_sum,
+    MIN(entry_time) AS first_entry_time,
+    MAX(exit_time) AS last_exit_time
+FROM completed_trades
+GROUP BY `key`;
+
+
+================Check total_pnl by Keys with hedge================================
+SELECT 
+    `key`,
+    SUM(total_pnl) AS total_pnl_sum,
+    MIN(entry_time) AS first_entry_time,
+    MAX(exit_time) AS last_exit_time
+FROM completed_trades
+GROUP BY `key`;
+
+Query to get pnl prod
+
+select sum(total_pnl),sum(total_pnl*75),(sum(total_pnl*75)*100)/190000 ,STRFTIME('%m', exit_time),key,user_id,real_trade from completed_trades 
+where user_id = 3 and STRFTIME('%m', exit_time) = '01' and real_trade = 'yes'
+group by user_id,key,STRFTIME('%m', exit_time),real_trade;
+
+Query to get pnl from pmk_all_in_one
+
+select sum(pnl),sum(pnl*75),(sum(pnl*75)*100)/190000 ,STRFTIME('%m', exit_time),key,real_trade from completed_trades 
+group by key,STRFTIME('%m', exit_time),real_trade;
+
+select * from completed_trades;
+
+rm -rf hdk_all_in_one
+rm -rf Stock_History_Analysis_with_Fyers
+rm -rf pmk_god_60
+rm -rf tradeJenie
+
+cd /home/harshilkhatri2808/HTML && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/trade_report.py > trade_report.log 2>&1 &
+cd /home/harshilkhatri2808/HTML && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/send_to_db.py > send_to_db.log 2>&1 &
+
+cd /home/harshilkhatri2808/HTML && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/manualtrading.py > manualtrading.log 2>&1 &
+cd /home/harshilkhatri2808/HTML && /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/manualtrading.py
+cd /home/harshilkhatri2808/prod/tradeJenie/
+source venv/bin/activate
+pip install flask
+
+Run http server command : python3 -m http.server 8000
+
+Run in background HTTP server
+nohup python3 -m http.server 8000 &
+
+Find the process running on port 8000:
+
+sudo netstat -tulnp | grep 8000
+kill -9 106094
+
+
+Find python program running on vm
+ps -ef | grep python
+
+/home/harshilkhatri2808/pmk_all_in_one/Trading.db
+/home/harshilkhatri2808/prod/tradeJenie/Trading.db
+
+cd /home/harshilkhatri2808/HTML && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/HTML/process_manager.py > process_manager.log 2>&1 &
+cd /home/harshilkhatri2808/uat/signaljenie && nohup /home/harshilkhatri2808/prod/tradeJenie/venv/bin/python /home/harshilkhatri2808/uat/signaljenie/runMe.py > signaljenie.log 2>&1 &
+
+
